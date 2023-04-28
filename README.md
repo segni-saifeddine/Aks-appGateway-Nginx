@@ -1,8 +1,7 @@
 
 # Title : NGINX Ingress Controllers and Azure App Gateway for Azure Kubernetes Service (AKS)
 
-
-
+[![AzureAks-AppGateway-Nginx](doc-images/Diagram.PNG)](doc-images/Diagram.PNG)
 
 ## Introduction :
 To set up Ingress in K8S, you need to configure an Ingress controller. These do not come as default with the cluster and must be installed separately. An ingress controller is typically a reverse web proxy server implementation in the cluster.There are many available Ingress controllers, all of which have different features (NGINX , AGIC , Traefik, Istio Ingress ... ).
@@ -19,17 +18,19 @@ In this article we will learn  to deploy the NGINX ingress controller in an Azur
 - You have kubectl installed in your local machine.
 - You have Helm3 installed in your local machine.
 
-## Objectives: what you will learn ?
-
-
 ## Before starting :
 
 - In this lab , i will use an Azure Kubernetes Service cluster , To create an Azure AKS cluster, preferably you use an Infrastructure as Code tool like Terraform.
 - In this article we will use the az Cli to create a private aks cluster , the cluster use CNI and it is deployed in the a specific vnet-subnet :
+```
 $ az aks create --name myPrivateAks --resource-group Saif-aks-lab --node-vm-size Standard_DS2_v2 --enable-managed-identity --enable-private-cluster --kubernetes-version 1.24.9 --vnet-subnet-id "/subscriptions/xxxxxxxxxxxxxx/resourceGroups/Saif-aks-lab/providers/Microsoft.Network/virtualNetworks/myVnet/subnets/aks-subnet"
+```
+[![Azure-resource-group](doc-images/rg-Saif-aks-lab.PNG)](doc-images/rg-Saif-aks-lab.PNG)
 
 - Connect to cluster using kubectl To connect to your Kubernetes cluster, use the az aks get-credentials command. Following example gets credentials for the AKS cluster named myAKSCluster in the myResourceGroup:
+```
 $ az aks get-credentials --resource-group Saif-aks-lab  --name myPrivateAks
+```
 - To verify the connection to your cluster, run the kubectl get nodes command to return a list of the cluster nodes , like i access my private clsuter from my own machine i need to use invoke command , other methods to connect to private aks cluster can be :
 * Create a VM in the same Azure Virtual Network (VNet) as the AKS cluster.
 * Use a VM in a separate network and set up Virtual network peering
@@ -80,6 +81,8 @@ $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c " kubectl get svc -
 ```
 > It may take a few minutes for the IP address to be assigned.
 - You can check the Load balncer service created at the azure protal :
+
+[![LB-service](doc-images/LB-service.PNG)](doc-images/LB-service.PNG)
 
 > Browsing to this IP address will show you the NGINX 404 page. This is because we have not set up any routing rules for our services yet.
 
@@ -221,16 +224,25 @@ spec:
 $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c " kubectl get ingress -n ingress-basic "
   NAME                  CLASS   HOSTS                                  ADDRESS      PORTS   AGE
   hello-world-ingress   nginx   hello-world-ingress.my-custom-domain   10.109.4.9   80      19s
+```
 > Traffic to hello-world-ingress.my-custom-domain/hello-world-one is routed to the service named aks-helloworld-one. Traffic to hello-world-ingress.my-custom-domain/hello-world-two is routed to the aks-helloworld-two service. Traffic to hello-world-ingress.my-custom-domain/static is routed to the service named aks-helloworld-one for static assets.
+
+[![ingress](doc-images/ingress-k8s.jpg)](doc-images/ingress-k8s.jpg)
 
 ## Configuring the Application Gateway
 - For this secction , you need an azure application Gateway deployed in the same virtual network as AKS , a public adress ip is associted to the App Gateway , grab the public IP of the application gateway and create an external DNS record.
+[![DNS-record](doc-images/DNS-record.PNG)](doc-images/DNS-record.PNG)
+
 - Now we need to configure manually the app Gateawy to forward traffic to the NGINX ingress controller.
 
 1- Create a Backend  pool that use the external Lb ip as a target ,In the Add a backend pool window, select Add to save the backend pool configuration and return to the Backends tab.
+[![Bakend-pool](doc-images/Backend-pool.PNG)](doc-images/Backend-pool.PNG)
 
 2- Create a backend settings and override the hostname ( The Backend setting will determine the behavior of the routing rule)
+[![Backend-settings](doc-images/Backend-settings.PNG)](doc-images/Backend-settings.PNG)
 
 3- Create an HTTPS listener
+[![Listener](doc-images/Listener.PNG)](doc-images/Listener.PNG)
 
 4- Create a rule , you'll connect the frontend and backend pool you created using a routing rule
+[![Rules](doc-images/Rules.PNG)](doc-images/Rules.PNG)
