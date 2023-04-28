@@ -227,25 +227,26 @@ $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c " kubectl get ingre
 ```
 > Traffic to hello-world-ingress.my-custom-domain/hello-world-one is routed to the service named aks-helloworld-one. Traffic to hello-world-ingress.my-custom-domain/hello-world-two is routed to the aks-helloworld-two service. Traffic to hello-world-ingress.my-custom-domain/static is routed to the service named aks-helloworld-one for static assets.
 
-[![ingress](doc-images/ingress-k8s.jpg)](doc-images/ingress-k8s.jpg)
+        [![ingress](doc-images/ingress-k8s.jpg)](doc-images/ingress-k8s.jpg)
 
 ## Configuring the Application Gateway
-- For this secction , you need an azure application Gateway deployed in the same virtual network as AKS , a public adress ip is associted to the App Gateway , grab the public IP of the application gateway and create an external DNS record.
+- For this secction , you need an azure application Gateway deployed in the same virtual network as AKS , a public adress ip is associted to the App Gateway
+1- grab the public IP of the application gateway and create an external DNS record.
 [![DNS-record](doc-images/DNS-record.PNG)](doc-images/DNS-record.PNG)
 
 - Now we need to configure manually the app Gateawy to forward traffic to the NGINX ingress controller.
 
-1- Create a Backend  pool that use the external Lb ip as a target ,In the Add a backend pool window, select Add to save the backend pool configuration and return to the Backends tab.
+2- Create a Backend  pool that use the external Lb ip as a target ,In the Add a backend pool window, select Add to save the backend pool configuration and return to the Backends tab.
 [![Bakend-pool](doc-images/Backend-pool.PNG)](doc-images/Backend-pool.PNG)
 
-2- Create a backend settings and override the hostname ( The Backend setting will determine the behavior of the routing rule)
+3- Create a backend settings and override the hostname ( The Backend setting will determine the behavior of the routing rule)
 [![Backend-settings](doc-images/Backend-settings.PNG)](doc-images/Backend-settings.PNG)
 
-3- Create an HTTPS listener
+4- Create an HTTPS listener
 
 [![Listener](doc-images/Listener.PNG)](doc-images/Listener.PNG)
 
-4- Create a rule , you'll connect the frontend and backend pool you created using a routing rule
+5- Create a rule , you'll connect the frontend and backend pool you created using a routing rule
 [![Rules](doc-images/Rules.PNG)](doc-images/Rules.PNG)
 
 ## that's all folks !
