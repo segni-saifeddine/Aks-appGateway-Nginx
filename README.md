@@ -1,5 +1,5 @@
 
-# Title : NGINX Ingress Controllers and Azure App Gateway for Azure Kubernetes Service (AKS)
+# NGINX Ingress Controllers and Azure App Gateway for Azure Kubernetes Service (AKS)
 
 [![AzureAks-AppGateway-Nginx](doc-images/Diagram.PNG)](doc-images/Diagram.PNG)
 
@@ -242,7 +242,14 @@ $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c " kubectl get ingre
 [![Backend-settings](doc-images/Backend-settings.PNG)](doc-images/Backend-settings.PNG)
 
 3- Create an HTTPS listener
+
 [![Listener](doc-images/Listener.PNG)](doc-images/Listener.PNG)
 
 4- Create a rule , you'll connect the frontend and backend pool you created using a routing rule
 [![Rules](doc-images/Rules.PNG)](doc-images/Rules.PNG)
+
+## that's all folks !
+That’s all for this lab, thanks for reading! For those who want to go longer, you will find here useful links :
+- https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli
+- https://docs.nginx.com/nginx-ingress-controller/
+- https://learn.microsoft.com/en-us/azure/application-gateway/quick-create-portal
