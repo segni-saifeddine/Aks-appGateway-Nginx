@@ -254,8 +254,8 @@ $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c " kubectl get ingre
 
 [![Rules](doc-images/Rules.PNG)](doc-images/Rules.PNG)
 
-## that's all folks !
-That’s all for this lab, thanks for reading! For those who want to go longer, you will find here useful links :
+## that's all folks 👏 !
+That’s all for this lab, thanks for reading 🙏 ,For those who want to go longer, you will find here useful links :
 - https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli
 - https://docs.nginx.com/nginx-ingress-controller/
 - https://learn.microsoft.com/en-us/azure/application-gateway/quick-create-portal
