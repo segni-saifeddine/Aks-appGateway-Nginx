@@ -1,14 +1,14 @@
 
-# NGINX Ingress Controllers and Azure App Gateway for Azure Kubernetes Service (AKS)
+# Nginx Ingress Controllers and Azure App Gateway for Azure Kubernetes Service (AKS)
 
 [![AzureAks-AppGateway-Nginx](doc-images/Diagram.PNG)](doc-images/Diagram.PNG)
 
-## Introduction :
-To set up Ingress in K8S, you need to configure an Ingress controller. These do not come as default with the cluster and must be installed separately. An ingress controller is typically a reverse web proxy server implementation in the cluster.There are many available Ingress controllers, all of which have different features (NGINX , AGIC , Traefik, Istio Ingress ... ).
+## Introduction 
+To set up Ingress in K8S, you need to configure an Ingress controller. These do not come as default with the cluster and must be installed separately. An ingress controller is typically a reverse web proxy server implementation in the cluster.There are many available Ingress controllers, all of which have different features (Nginx , AGIC , Traefik, Istio Ingress ... ).
 You can have multiple ingress controllers in a cluster mapped to multiple load balancers should you wish!
 In this article we will learn  to deploy the NGINX ingress controller in an Azure Kubernetes Service (AKS) cluster. Two applications are then run in the AKS cluster,and we will use the application Gateway side to side to NGINX controller to expose this applications .
 
-## Assumptions and Prerequisites :
+## Assumptions and Prerequisites
 - Basic hands-on experience with Kubernetes.
 - A resource group, in this case Saif-aks-lab
 - A virtual network with two subnets asg and aks. The asg subnet will hold the Application Gateway, and the aks subnet will hold the AKS cluster.
@@ -18,9 +18,9 @@ In this article we will learn  to deploy the NGINX ingress controller in an Azur
 - You have kubectl installed in your local machine.
 - You have Helm3 installed in your local machine.
 
-## Before starting :
+## Before starting
 
-- In this lab , i will use an Azure Kubernetes Service cluster , To create an Azure AKS cluster, preferably you use an Infrastructure as Code tool like Terraform.
+- In this article , we will use an Azure Kubernetes Service cluster , To create an Azure AKS cluster, preferably you use an Infrastructure as Code tool like Terraform.
 - In this article we will use the az Cli to create a private aks cluster , the cluster use CNI and it is deployed in the a specific vnet-subnet :
 ```
 $ az aks create --name myPrivateAks --resource-group Saif-aks-lab --node-vm-size Standard_DS2_v2 --enable-managed-identity --enable-private-cluster --kubernetes-version 1.24.9 --vnet-subnet-id "/subscriptions/xxxxxxxxxxxxxx/resourceGroups/Saif-aks-lab/providers/Microsoft.Network/virtualNetworks/myVnet/subnets/aks-subnet"
@@ -41,7 +41,7 @@ $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c " kubectl get nodes
   NAME                                STATUS   ROLES   AGE   VERSION
   aks-agentpool-11938646-vmss000002   Ready    agent   35m   v1.24.9
 ```
-## Setting up Ingress with NGINX :
+## Setting up Ingress with NGINX
 
 NGINX is a widely used Ingress controller, we will run through how to set this up with Azure Kubernetes Service.
 
@@ -60,7 +60,7 @@ $ az aks command invoke -g  Saif-aks-lab  -n myPrivateAks -c "kubectl create nam
   "10.109.4.9"
 ]
 ```
-I will chose the adresse ip 10.109.4.9 as a Load  balancer service external ip .
+We will chose the adresse ip 10.109.4.9 as a Load  balancer service external ip .
 
 3- Use Helm to deploy an NGINX ingress controller  :
 ```
